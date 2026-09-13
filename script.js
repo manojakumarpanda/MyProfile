@@ -15,3 +15,40 @@ document.querySelector(".menu").addEventListener("click", () => {
     nav.style.alignItems = "flex-start";
   }
 });
+
+/* ===== Profile photo lightbox ===== */
+(function () {
+  const avatar = document.getElementById("avatar");
+  const lightbox = document.getElementById("photoLightbox");
+  if (!avatar || !lightbox) return;
+
+  const closeBtn = document.getElementById("photoLightboxClose");
+
+  const open = () => {
+    lightbox.classList.add("open");
+    document.body.classList.add("lb-open");
+    closeBtn.focus();
+  };
+
+  const close = () => {
+    lightbox.classList.remove("open");
+    document.body.classList.remove("lb-open");
+    avatar.focus();
+  };
+
+  avatar.addEventListener("click", open);
+  avatar.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      open();
+    }
+  });
+
+  closeBtn.addEventListener("click", close);
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) close();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && lightbox.classList.contains("open")) close();
+  });
+})();

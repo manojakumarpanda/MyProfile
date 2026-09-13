@@ -20,7 +20,39 @@
                   font:700 30px "Space Grotesk";color:#809dff;border:3px solid #070b12}
     .avatar-inner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
     .avatar .status{position:absolute;right:5px;bottom:7px;width:15px;height:15px;border-radius:50%;
-                    background:#6df3a5;border:3px solid #070b12;box-shadow:0 0 14px #6df3a5}
+                    background:#6df3a5;border:3px solid #070b12;box-shadow:0 0 14px #6df3a5;z-index:2}
+
+    /* Hover / click to expand */
+    .avatar{cursor:zoom-in;transition:transform .35s cubic-bezier(.2,.8,.3,1),box-shadow .35s ease}
+    .avatar:hover,.avatar:focus-visible{transform:scale(1.09);
+            box-shadow:0 24px 60px rgba(39,92,255,.55);outline:none}
+    .avatar-inner img{transition:transform .45s cubic-bezier(.2,.8,.3,1)}
+    .avatar:hover .avatar-inner img,.avatar:focus-visible .avatar-inner img{transform:scale(1.12)}
+    .avatar .zoom-hint{position:absolute;inset:3px;border-radius:50%;display:grid;place-items:center;
+            background:rgba(7,11,18,.55);color:#dbe4ff;font:600 11px "Space Grotesk";letter-spacing:.06em;
+            opacity:0;transition:opacity .3s ease;pointer-events:none;z-index:1}
+    .avatar:hover .zoom-hint,.avatar:focus-visible .zoom-hint{opacity:1}
+
+    /* Lightbox */
+    .lightbox{position:fixed;inset:0;z-index:120;display:none;place-items:center;padding:24px;
+            background:rgba(4,7,13,.86);backdrop-filter:blur(8px)}
+    .lightbox.open{display:grid;animation:lb-in .25s ease}
+    @keyframes lb-in{from{opacity:0}to{opacity:1}}
+    .lightbox figure{margin:0;text-align:center;animation:lb-pop .3s cubic-bezier(.2,.8,.3,1)}
+    @keyframes lb-pop{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
+    .lightbox img{max-width:min(560px,86vw);max-height:74vh;width:auto;height:auto;display:block;
+            margin:0 auto;border-radius:18px;border:1px solid #24324a;
+            box-shadow:0 30px 80px rgba(0,0,0,.6)}
+    .lightbox figcaption{margin-top:14px;font:600 14px "Space Grotesk";color:#dbe4ff}
+    .lightbox figcaption small{display:block;margin-top:4px;font:400 12px Inter,sans-serif;color:#748198}
+    .lightbox .close{position:absolute;top:22px;right:24px;width:42px;height:42px;border-radius:50%;
+            border:1px solid #24324a;background:#0d1522;color:#dbe4ff;font-size:20px;line-height:1;
+            cursor:pointer;transition:background .2s ease,transform .2s ease}
+    .lightbox .close:hover{background:#162032;transform:rotate(90deg)}
+    body.lb-open{overflow:hidden}
+    @media(prefers-reduced-motion:reduce){
+      .avatar,.avatar-inner img,.lightbox.open,.lightbox figure{transition:none;animation:none}
+    }
     .hero-id .who strong{display:block;font:600 15px "Space Grotesk";color:#fff}
     .hero-id .who span{font-size:12px;color:#748198}
 
@@ -62,11 +94,13 @@
     <section class="hero">
       <div class="hero-copy">
         <div class="hero-id">
-          <div class="avatar">
+          <div class="avatar" id="avatar" role="button" tabindex="0"
+               aria-label="Expand profile photo of Manoja Kumar Panda" title="Click to enlarge">
             <div class="avatar-inner">
               MKP
               <img src="assets/logos/IMG_1836.JPG" alt="Manoja Kumar Panda" onerror="this.remove()">
             </div>
+            <span class="zoom-hint">VIEW</span>
             <span class="status" title="Open to opportunities"></span>
           </div>
           <div class="who">
@@ -254,6 +288,14 @@
     <span>© <span id="year"></span> Manoja Kumar Panda</span>
     <span>Software Engineer • Cloud • DevOps</span>
   </footer>
+
+  <div class="lightbox" id="photoLightbox" role="dialog" aria-modal="true" aria-label="Profile photo">
+    <button class="close" id="photoLightboxClose" aria-label="Close photo">&times;</button>
+    <figure>
+      <img src="assets/logos/IMG_1836.JPG" alt="Manoja Kumar Panda">
+      <figcaption>Manoja Kumar Panda<small>Senior Software Engineer @ MomentText</small></figcaption>
+    </figure>
+  </div>
 
   <script src="script.js"></script>
 </body>
